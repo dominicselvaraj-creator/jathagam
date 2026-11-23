@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mod,rasi,nakshatra,panchanga,tropicalAscendant,vimshottari,marsDoshaScreen,bayesianUpdate} from '../src/core.js';
+test('normalization and rāsi boundaries',()=>{assert.equal(mod(-10),350);assert.equal(rasi(0).number,1);assert.equal(rasi(359.999).number,12);});
+test('27 nakshatras and 4 padas',()=>{assert.equal(nakshatra(0).name,'Ashwini');assert.equal(nakshatra(3.5).pada,2);assert.equal(nakshatra(359.99).name,'Revati');assert.equal(nakshatra(359.99).pada,4);});
+test('tithi and karana at phase boundaries',()=>{assert.equal(panchanga(0,0,1).tithiName,'Pratipada');assert.equal(panchanga(0,180,1).tithiName,'Pratipada');assert.equal(panchanga(0,359,1).tithiName,'Amavasya');assert.equal(panchanga(0,0,1).karana,'Kimstughna');});
+test('ascendant at equator is eastern, roughly 90 degrees ahead of local sidereal RA',()=>{assert.ok(Math.abs(tropicalAscendant(0,0,0,23.44)-90)<0.001);assert.ok(Math.abs(tropicalAscendant(6,0,0,23.44)-180)<0.001);assert.ok(Math.abs(tropicalAscendant(12,0,0,23.44)-270)<0.001);});
+test('dasha first balance and sequence',()=>{const t=new Date('2000-01-01T00:00:00Z');const d=vimshottari(t,0);assert.equal(d[0].lord,'Ketu');assert.equal(d[1].lord,'Venus');assert.ok(d[0].years>6.999);});
+test('Mars sign screening',()=>{assert.equal(marsDoshaScreen(0,0).flag,true);assert.equal(marsDoshaScreen(60,0).flag,false);});
+test('Bayesian update',()=>{assert.ok(Math.abs(bayesianUpdate(0.2,[{likelihoodIfTrue:0.7,likelihoodIfFalse:0.2}])-0.4666666666666667)<1e-10);});

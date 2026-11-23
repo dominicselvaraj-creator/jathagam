@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#14243a"><meta name="description" content="Private, offline-capable Vedic birth chart calculator. All birth details stay on this device.">
+<link rel="manifest" href="./manifest.webmanifest"><link rel="stylesheet" href="./style.css"><title>Offline Vedic Birth Chart</title></head>
+<body>
+<header><div class="wrap"><p class="eyebrow">LOCAL-FIRST · STATIC JAVASCRIPT</p><h1>Vedic Birth Chart</h1><p>Birth details stay on your device. Astronomical positions are calculated in your browser, even without a network connection after the site is cached.</p><div id="offlineStatus" class="small">Checking offline readiness…</div></div></header>
+<main class="wrap">
+<section class="panel"><h2>Birth details</h2><form id="birthForm">
+<div class="fields"><label>Date of birth <input id="birthDate" type="date" required></label><label>Local time of birth <input id="birthTime" type="time" step="1" required></label>
+<label>Latitude (north +) <input id="latitude" type="number" step="any" min="-90" max="90" placeholder="13.0827" required></label><label>Longitude (east +) <input id="longitude" type="number" step="any" min="-180" max="180" placeholder="80.2707" required></label>
+<label>IANA birth time zone <input id="timezone" type="text" list="zones" placeholder="Asia/Kolkata" autocomplete="off" required></label>
+<datalist id="zones"><option value="Asia/Kolkata"><option value="America/Chicago"><option value="America/Los_Angeles"><option value="Europe/London"><option value="Asia/Dubai"><option value="Australia/Sydney"></datalist>
+</div>
+<div class="row"><button type="button" data-preset="chennai" class="secondary">Chennai coordinates</button><button type="button" data-preset="bengaluru" class="secondary">Bengaluru coordinates</button><button type="button" data-preset="austin" class="secondary">Austin coordinates</button></div>
+<details class="place"><summary>Look up a place name (optional; uses the internet)</summary><label>Place name <input id="placeName" type="text" placeholder="Chennai"></label><button id="geocode" type="button" class="secondary">Look up latitude, longitude &amp; time zone</button><p class="hint">Only the place name is sent to Open-Meteo. Birth date and time are never sent. Skip this entirely when offline.</p></details>
+<div class="actions"><button type="submit">Calculate on this device</button><span id="message" role="status" aria-live="polite"></span></div>
+</form></section>
+<section id="results" hidden aria-live="polite">
+<div class="summary" id="summary"></div>
+<div class="resultGrid"><section class="panel"><h2>Rāsi chart · South Indian layout</h2><div class="chart" id="chart"></div><p class="hint">Fixed-sign chart. “Asc” marks the rising rāsi. Planet abbreviations shown inside signs.</p></section>
+<section class="panel"><h2>Panchangam at birth</h2><dl id="panchanga"></dl><p class="hint">These values are evaluated at the instant of birth, not the traditional sunrise-time panchangam.</p></section></div>
+<section class="panel"><h2>Sidereal planetary longitudes</h2><div class="tableWrap"><table><thead><tr><th>Body</th><th>Rāsi</th><th>Degree within sign</th><th>Absolute longitude</th></tr></thead><tbody id="planetRows"></tbody></table></div></section>
+<section class="panel"><h2>Vimshottari mahadasha sequence</h2><p class="hint">The first line is the remaining mahadasha at birth. Dates are approximate due to year-length convention.</p><div class="tableWrap"><table><thead><tr><th>Lord</th><th>Starts</th><th>Ends</th></tr></thead><tbody id="dashas"></tbody></table></div></section>
+<section class="panel"><h2>Dosham screen &amp; Palan rules</h2><div id="interpretation"></div><p class="hint">Illustrative, transparent traditional rule checks only. This app does not assert scientifically validated predictions or infer your future.</p></section>
+<section class="panel"><h2>Bayesian check (requires your evidence model)</h2><p>For a genuine Bayesian posterior you must supply a prior probability and measured likelihoods. Astrology alone does not provide validated likelihoods; none are invented here.</p>
+<details><summary>Open offline Bayesian calculator</summary><p class="hint">Paste JSON like <code>{"prior":0.2,"evidence":[{"label":"Observed test result","likelihoodIfTrue":0.7,"likelihoodIfFalse":0.2}]}</code>. This example is a math demonstration, not an astrological claim.</p>
+<textarea id="modelJson" rows="5" spellcheck="false" placeholder='{"prior": 0.2, "evidence": []}'></textarea><button id="runBayes" type="button">Calculate posterior</button><p id="bayesResult" role="status"></p></details></section>
+<section class="panel notes"><h2>Calculation notes</h2><ul id="warnings"></ul><button type="button" id="saveJson" class="secondary">Download results as JSON</button><p class="hint">JSON download is local; no data is uploaded. The browser does not permanently save birth details.</p></section>
+</section>
+</main><footer class="wrap">Built with bundled Astronomy Engine and Moment Timezone. No accounts, telemetry, fonts, or network requests during chart calculation.</footer>
+<script src="./app.js" defer></script></body></html>
